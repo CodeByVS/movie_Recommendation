@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Sen:wght@400;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <title>Search Results | Flakes</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/48/000000/clapperboard.png">
+    <meta name="description" content="Search for your favorite movies and TV shows on Flakes streaming service.">
+    <style>
+        /* Additional styles specific to search page */
+        .search-header {
+            padding: 50px 20px 30px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(20, 20, 20, 0.8), rgba(20, 20, 20, 0.4));
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .search-header h1 {
+            font-size: 38px;
+            margin-bottom: 25px;
+            position: relative;
+            display: inline-block;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(229, 9, 20, 0.3);
+        }
+
+        .search-header h1::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -12px;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), #ff5e3a);
+            border-radius: 4px;
+        }
+
+        .search-header p {
+            font-size: 20px;
+            color: #bbb;
+            margin-bottom: 30px;
+            font-weight: 300;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 80px 0;
+            background: rgba(30, 30, 30, 0.5);
+            border-radius: 15px;
+            margin: 30px auto;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .no-results i {
+            font-size: 70px;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .no-results h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .no-results p {
+            font-size: 18px;
+            color: #aaa;
+            max-width: 600px;
+            margin: 0 auto 35px;
+            line-height: 1.6;
+        }
+
+        .return-home {
+            display: inline-block;
+            background: linear-gradient(to right, var(--primary-color), #ff5e3a);
+            color: white;
+            padding: 14px 28px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 20px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
+        }
+
+        .return-home:hover {
+            background: linear-gradient(to right, #ff5e3a, var(--primary-color));
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(229, 9, 20, 0.4);
+        }
+
+        .search-item {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .search-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(229, 9, 20, 0.3);
+        }
+
+        .search-item-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .search-item:hover .search-item-img {
+            transform: scale(1.05);
+        }
+
+        .search-item-content {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .search-item-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .search-item-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        .search-item-desc {
+            font-size: 14px;
+            color: #ddd;
+            margin-bottom: 15px;
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            line-height: 1.4;
+        }
+
+        .search-item-button {
+            display: inline-block;
+            background: linear-gradient(to right, var(--primary-color), #ff5e3a);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            text-align: center;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(229, 9, 20, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        .search-item-button:hover {
+            background: linear-gradient(to right, #ff5e3a, var(--primary-color));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(229, 9, 20, 0.4);
+        }
+
+        .search-filters {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .filter-button {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-button:hover, .filter-button.active {
+            background: linear-gradient(to right, var(--primary-color), #ff5e3a);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
+        }
+
+        /* Loading animation */
+        .loader {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+        }
+        .loader div {
+            position: absolute;
+            top: 33px;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: linear-gradient(to right, var(--primary-color), #ff5e3a);
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+        }
+        .loader div:nth-child(1) {
+            left: 8px;
+            animation: loader1 0.6s infinite;
+        }
+        .loader div:nth-child(2) {
+            left: 8px;
+            animation: loader2 0.6s infinite;
+        }
+        .loader div:nth-child(3) {
+            left: 32px;
+            animation: loader2 0.6s infinite;
+        }
+        .loader div:nth-child(4) {
+            left: 56px;
+            animation: loader3 0.6s infinite;
+        }
+        @keyframes loader1 {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+        @keyframes loader3 {
+            0% { transform: scale(1); }
+            100% { transform: scale(0); }
+        }
+        @keyframes loader2 {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(24px, 0); }
+        }
+        
+        /* Pulse animation for the return button */
+        .pulse-animation {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.7);
+                transform: scale(1);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(229, 9, 20, 0);
+                transform: scale(1.05);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(229, 9, 20, 0);
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body class="dark-mode">
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="navbar-container">
+            <div class="logo-container">
+                <h1 class="logo"><a href="/" style="text-decoration: none; color: inherit;">FLAKES</a></h1>
+            </div>
+            <div class="menu-container">
+                <!-- Fix menu list items -->
+                <ul class="menu-list">
+                    <li class="menu-list-item"><a href="/">Home</a></li>
+                </ul>
+            </div>
+            <div class="search-container">
+                <input type="text" id="search-input" class="search-input" placeholder="Search for movies or TV shows...">
+                <button class="search-button" id="search-button" aria-label="Search"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="profile-container">
+                <!-- Profile content can go here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="search-header">
+            <h1>Search Results</h1>
+            <p id="search-info">Searching for: <span id="search-term">...</span></p>
+            
+            <!-- Search Filters Removed -->
+        </div>
+
+        <!-- Search Results -->
+        <div id="search-results-container">
+            <!-- Loading indicator will be shown initially -->
+            <div id="loading" class="no-results">
+                <div class="loader"><div></div><div></div><div></div><div></div></div>
+                <p>Searching for results...</p>
+            </div>
+            
+            <!-- No results message (hidden initially) -->
+            <div id="no-results" class="no-results" style="display:none;">
+                <i class="fas fa-search"></i>
+                <h2>No results found</h2>
+                <p>We couldn't find any movies or TV shows matching your search. Try a different search term or browse our categories.</p>
+                <a href="/" class="return-home">Return to Homepage</a>
+            </div>
+            
+            <!-- Results grid (hidden initially) -->
+            <div id="search-results" class="search-results" style="display:none;">
+                <!-- Search results will be added here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <!-- Footer content remains the same -->
+    </footer>
+
+    <script>
+        // Search functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize empty movie data array that will be populated from API
+            let movieData = [];
+
+            // Get search query from URL parameters or localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlQuery = urlParams.get('query');
+            const recommendMovie = urlParams.get('recommend') || localStorage.getItem('recommendMovie');
+            const searchQuery = urlQuery || localStorage.getItem('movieSearchQuery') || '';
+            
+            // Set the search term display
+            if (recommendMovie) {
+                document.getElementById('search-term').textContent = recommendMovie;
+                document.getElementById('search-info').textContent = `Recommendations for: "${recommendMovie}"`;
+            } else {
+                document.getElementById('search-term').textContent = searchQuery;
+            }
+            document.getElementById('search-input').value = searchQuery;
+            
+            // Debug: Log the search query or recommendation
+            console.log('Search query:', searchQuery);
+            console.log('Recommendation for:', recommendMovie);
+
+            // Function to create search results with improved error handling
+            function displaySearchResults(results) {
+                console.log('Displaying search results:', results);
+                const resultsContainer = document.getElementById('search-results');
+                const noResultsContainer = document.getElementById('no-results');
+                const loadingContainer = document.getElementById('loading');
+                
+                // Hide loading indicator
+                loadingContainer.style.display = 'none';
+                
+                if (!resultsContainer) {
+                    console.error('Results container not found');
+                    return;
+                }
+                
+                resultsContainer.innerHTML = '';
+                
+                if (!results || results.length === 0) {
+                    console.log('No results found');
+                    // Show no results message
+                    noResultsContainer.style.display = 'block';
+                    resultsContainer.style.display = 'none';
+                    return;
+                }
+                
+                // Show results container
+                resultsContainer.style.display = 'grid';
+                noResultsContainer.style.display = 'none';
+                
+                results.forEach((item, index) => {
+                    const resultElement = document.createElement('div');
+                    resultElement.className = 'search-item';
+                    resultElement.dataset.type = item.type || '';
+                    resultElement.dataset.genre = (item.genre || '').toLowerCase();
+                    
+                    // Use the poster_path directly from the API response
+                    // If poster_path is missing or invalid, use a placeholder image
+                    let imageUrl;
+                    if (item.poster_path && (item.poster_path.startsWith('/') || item.poster_path.startsWith('http'))) {
+                        imageUrl = item.poster_path;
+                    } else {
+                        // Use a placeholder image instead of local images
+                        imageUrl = 'https://via.placeholder.com/500x750?text=No+Poster+Available';
+                    }
+                    console.log('Using image URL:', imageUrl, 'for movie:', item.title);
+                    
+                    resultElement.innerHTML = `
+                        <img src="${imageUrl}" class="search-item-img" alt="${item.title}" onerror="this.onerror=null;this.src='https://via.placeholder.com/500x750?text=No+Poster+Available';">
+                        <div class="search-item-content">
+                            <h3 class="search-item-title">${item.title}</h3>
+                            <p class="search-item-desc">${item.overview || ''}</p>
+                            <button class="search-item-button recommend-btn" data-title="${item.title}">Get Recommendations</button>
+                        </div>
+                    `;
+                    
+                    // Add click event for recommendation button
+                    const recommendBtn = resultElement.querySelector('.recommend-btn');
+                    if (recommendBtn) {
+                        recommendBtn.addEventListener('click', function(e) {
+                            e.stopPropagation(); // Prevent bubbling to parent
+                            const movieTitle = this.dataset.title;
+                            getRecommendations(movieTitle);
+                        });
+                    }
+                    
+                    resultsContainer.appendChild(resultElement);
+                });
+                
+                // Add animation to search results
+                const searchItems = document.querySelectorAll('.search-item');
+                searchItems.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.classList.add('fade-in');
+                    }, 100 * index);
+                });
+            }
+
+            // Function to filter results with improved search algorithm
+            function searchMovies(query, filterType = 'all') {
+                if (!query) {
+                    return [];
+                }
+                
+                // Normalize the query for better matching
+                const normalizedQuery = query.toLowerCase().trim();
+                
+                // Improved search algorithm with weighted results
+                let results = movieData.filter(movie => {
+                    const titleMatch = movie.title.toLowerCase().includes(normalizedQuery);
+                    const descMatch = movie.description.toLowerCase().includes(normalizedQuery);
+                    const genreMatch = movie.genre.toLowerCase().includes(normalizedQuery);
+                    
+                    // Prioritize title matches
+                    if (titleMatch) movie.relevance = 3;
+                    else if (genreMatch) movie.relevance = 2;
+                    else if (descMatch) movie.relevance = 1;
+                    else movie.relevance = 0;
+                    
+                    return titleMatch || descMatch || genreMatch;
+                });
+                
+                // Sort by relevance
+                results.sort((a, b) => b.relevance - a.relevance);
+                
+                // Apply additional filters if needed
+                if (filterType !== 'all') {
+                    if (filterType === 'movie' || filterType === 'tv') {
+                        results = results.filter(movie => movie.type === filterType);
+                    } else if (filterType === 'recent') {
+                        // Just a sample filter for demonstration
+                        results = results.filter(movie => movie.year.includes('202') || movie.year.includes('201'));
+                    } else if (filterType === 'popular') {
+                        // Just a sample filter for demonstration
+                        results = results.filter(movie => parseFloat(movie.rating) >= 8.5);
+                    }
+                }
+                
+                return results;
+            }
+
+            // Function to fetch search results from API
+            function fetchSearchResults(query, filterType = 'all') {
+                if (!query) {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('no-results').style.display = 'block';
+                    document.getElementById('search-results').style.display = 'none';
+                    return;
+                }
+                
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('no-results').style.display = 'none';
+                document.getElementById('search-results').style.display = 'none';
+                
+                // Fetch results from API
+                // Debug: Log the API URL
+                const apiUrl = `/api/search?query=${encodeURIComponent(query)}`;
+                console.log('Fetching from API URL:', apiUrl);
+                
+                fetch(apiUrl)
+                    .then(response => {
+                        console.log('API response status:', response.status);
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Debug: Log the API response
+                        console.log('Search API response:', data);
+                        
+                        // Process the API response
+                        if (!data || data.length === 0) {
+                            document.getElementById('loading').style.display = 'none';
+                            document.getElementById('no-results').style.display = 'block';
+                            document.getElementById('search-results').style.display = 'none';
+                            return;
+                        }
+                        
+                        // Convert API data to the format expected by displaySearchResults
+                        const processedResults = data.map(movie => {
+                            // Use the poster_path directly from the API response
+                            // The backend now provides the correct poster_path
+                            
+                            return {
+                                title: movie.title,
+                                movie_id: movie.movie_id,
+                                poster_path: movie.poster_path, // Use poster_path directly from API
+                                overview: movie.title, // Using title as placeholder for overview
+                                type: 'movie',
+                                genre: 'unknown',
+                                year: '2023',
+                                rating: '8.0',
+                                relevance: 3
+                            };
+                        });
+                        
+                        // Update movieData for other functions to use
+                        movieData = processedResults;
+                        
+                        // Hide loading indicator
+                        document.getElementById('loading').style.display = 'none';
+                        
+                        // Make sure the search results container is visible
+                        document.getElementById('no-results').style.display = 'none';
+                        document.getElementById('search-results').style.display = 'grid';
+                        
+                        // Display the results
+                        displaySearchResults(processedResults);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching search results:', error);
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('no-results').style.display = 'block';
+                        document.getElementById('search-results').style.display = 'none';
+                    });
+            }
+            
+            // Search or get recommendations on page load with a slight delay for better UX
+            setTimeout(() => {
+                // Check if we need to get recommendations
+                const recommendMovie = urlParams.get('recommend') || localStorage.getItem('recommendMovie');
+                
+                if (recommendMovie) {
+                    // Clear the localStorage item to prevent showing recommendations on refresh
+                    localStorage.removeItem('recommendMovie');
+                    
+                    // Debug: Log the recommendation request
+                    console.log('Initiating recommendations for:', recommendMovie);
+                    
+                    // Get recommendations for the movie
+                    getRecommendations(recommendMovie);
+                } else if (searchQuery) {
+                    // Debug: Log the search query before fetching
+                    console.log('Initiating search with query:', searchQuery);
+                    fetchSearchResults(searchQuery);
+                } else {
+                    // If no search query or recommendation, show no results
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('no-results').style.display = 'block';
+                    document.getElementById('search-results').style.display = 'none';
+                }
+            }, 500); // Reduced loading delay for better UX
+
+            // Handle new search with debounce for performance
+            let searchTimeout;
+            document.getElementById('search-button').addEventListener('click', performSearch);
+            document.getElementById('search-input').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            function performSearch() {
+                const query = document.getElementById('search-input').value.trim();
+                if (query) {
+                    document.getElementById('search-term').textContent = query;
+                    
+                    // Store the search query
+                    localStorage.setItem('movieSearchQuery', query);
+                    
+                    // Clear previous timeout if it exists
+                    if (searchTimeout) clearTimeout(searchTimeout);
+                    
+                    // Set new timeout for debouncing
+                    searchTimeout = setTimeout(() => {
+                        fetchSearchResults(query, 'all');
+                    }, 500);
+                }
+            }
+            
+            // Filter buttons section removed
+
+            // Theme is now permanently set to dark mode
+            const body = document.body;
+            body.classList.add("dark-mode");
+            
+            // Ensure dark mode is always enabled
+            localStorage.setItem('darkMode', 'enabled');
+            
+            // Add ripple effect to buttons
+            document.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Remove any existing ripples first
+                    const existingRipples = this.querySelectorAll('.ripple');
+                    existingRipples.forEach(ripple => {
+                        if (ripple) ripple.remove();
+                    });
+                    
+                    // Create ripple effect
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple');
+                    this.appendChild(ripple);
+                    
+                    // Position the ripple
+                    const rect = button.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = `${size}px`;
+                    ripple.style.left = `${x}px`;
+                    ripple.style.top = `${y}px`;
+                    
+                    // Remove ripple after animation
+                    setTimeout(() => {
+                        if (ripple && ripple.parentNode) {
+                            ripple.remove();
+                        }
+                    }, 600);
+                });
+            });
+
+            // Function to get movie recommendations
+            function getRecommendations(movieTitle) {
+                console.log('Getting recommendations for:', movieTitle);
+                
+                // Show loading indicator
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('no-results').style.display = 'none';
+                document.getElementById('search-results').style.display = 'none';
+                
+                // Fixed API endpoint - using 'movie' parameter instead of 'title'
+                fetch(`/api/recommend?movie=${encodeURIComponent(movieTitle)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Failed to fetch recommendations (Status: ${response.status})`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Recommendation API response:', data);
+                        
+                        // Check if data is an error object
+                        if (data && data.error) {
+                            throw new Error(data.error);
+                        }
+                        
+                        // Check if data is an array and not empty
+                        if (!Array.isArray(data) || data.length === 0) {
+                            throw new Error('No recommendations found');
+                        }
+                        
+                        // Process the recommendations data
+                        const processedResults = data.map(movie => {
+                            // Use the poster_path directly from the API response
+                            // If poster_path is missing or invalid, use a placeholder image
+                            let posterPath = movie.poster_path;
+                            if (!posterPath || !(posterPath.startsWith('/') || posterPath.startsWith('http'))) {
+                                posterPath = 'https://via.placeholder.com/500x750?text=No+Poster+Available';
+                            }
+                            
+                            return {
+                                title: movie.title,
+                                movie_id: movie.movie_id,
+                                poster_path: posterPath,
+                                overview: `Similarity: ${(movie.similarity * 100).toFixed(1)}%`,
+                                type: 'movie',
+                                genre: 'recommended'
+                            };
+                        });
+                        
+                        // Update the search info text
+                        document.getElementById('search-info').textContent = `Recommendations for: "${movieTitle}"`;
+                        
+                        // Display the processed results
+                        displaySearchResults(processedResults);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching recommendations:', error);
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('no-results').style.display = 'block';
+                        document.getElementById('search-results').style.display = 'none';
+                        
+                        // Set error message with more details
+                        document.getElementById('no-results').querySelector('h2').textContent = 'Recommendation Error';
+                        
+                        // Customize error message based on error type
+                        let errorMessage = `Sorry, we couldn't load recommendations for "${movieTitle}".`;
+                        if (error.message && error.message.includes('not found')) {
+                            errorMessage += ` The movie "${movieTitle}" was not found in our database.`;
+                        } else if (error.message && error.message.includes('No recommendations')) {
+                            errorMessage += ` We couldn't find any similar movies.`;
+                        } else {
+                            errorMessage += ` Please try another movie or try again later.`;
+                        }
+                        
+                        document.getElementById('no-results').querySelector('p').textContent = errorMessage;
+                        
+                        // Improve the return button functionality
+                        const noResultsContainer = document.getElementById('no-results');
+                        const returnButton = noResultsContainer.querySelector('.return-home');
+                        if (returnButton) {
+                            returnButton.textContent = 'Return to Search Results';
+                            returnButton.href = '#';
+                            returnButton.classList.add('pulse-animation'); // Add attention-grabbing animation
+                            
+                            // Improved click handler
+                            returnButton.onclick = function(e) {
+                                e.preventDefault();
+                                
+                                // Show loading indicator briefly for better UX
+                                document.getElementById('loading').style.display = 'block';
+                                document.getElementById('no-results').style.display = 'none';
+                                
+                                // Reload the current search results with a slight delay for better UX
+                                setTimeout(() => {
+                                    if (searchQuery && searchQuery.trim() !== '') {
+                                        // Update the search info text back to original search
+                                        document.getElementById('search-info').textContent = `Searching for: ${searchQuery}`;
+                                        fetchSearchResults(searchQuery);
+                                    } else {
+                                        window.location.href = '/';
+                                    }
+                                }, 300);
+                            };
+                        }
+                    });
+            }
+
+            // Modify the showResults function to include recommendation functionality
+            function showResults(results) {
+                const resultsContainer = document.getElementById('search-results');
+                if (!resultsContainer) {
+                    console.error('Search results container not found');
+                    return;
+                }
+                
+                resultsContainer.innerHTML = '';
+                
+                if (!results || results.length === 0) {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('no-results').style.display = 'block';
+                    document.getElementById('search-results').style.display = 'none';
+                    return;
+                }
+                
+                results.forEach((item, index) => {
+                    const resultElement = document.createElement('div');
+                    resultElement.className = 'search-result-item';
+                    resultElement.dataset.id = item.id || index + 1;
+                    
+                    // Add a click listener to get recommendations
+                    resultElement.addEventListener('click', function() {
+                        // Clear any existing recommendations
+                        const existingRecommendations = document.querySelector('.recommendations-container');
+                        if (existingRecommendations) {
+                            existingRecommendations.remove();
+                        }
+                        
+                        // Get recommendations for this movie
+                        getRecommendations(item.title);
+                    });
+                    
+                    // Create a container for each result
+                    // Use the poster_path directly from the API or a placeholder
+                    let imageUrl = item.poster_path;
+                    if (!imageUrl || !(imageUrl.startsWith('/') || imageUrl.startsWith('http'))) {
+                        imageUrl = 'https://via.placeholder.com/500x750?text=No+Poster+Available';
+                    }
+                    
+                    resultElement.innerHTML = `
+                        <img src="${imageUrl}" class="search-item-img" alt="${item.title}" onerror="this.onerror=null;this.src='https://via.placeholder.com/500x750?text=No+Poster+Available';">
+                        <div class="search-item-content">
+                            <h3 class="search-item-title">${item.title}</h3>
+                            <p class="search-item-desc">${item.description}</p>
+                            <button class="search-item-button recommend-btn" data-title="${item.title}">Get Recommendations</button>
+                        </div>
+                    `;
+                    
+                    // Add click event for recommendation button
+                    const recommendBtn = resultElement.querySelector('.recommend-btn');
+                    if (recommendBtn) {
+                        recommendBtn.addEventListener('click', function(e) {
+                            e.stopPropagation(); // Prevent bubbling to parent
+                            const movieTitle = this.dataset.title;
+                            getRecommendations(movieTitle);
+                        });
+                    }
+                    
+                    resultsContainer.appendChild(resultElement);
+                });
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('no-results').style.display = 'none';
+                document.getElementById('search-results').style.display = 'grid';
+                
+                // Add animation to search results
+                const searchItems = document.querySelectorAll('.search-item');
+                searchItems.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.classList.add('fade-in');
+                    }, 100 * index);
+                });
+            }
+
+            // Add styles for recommendations
+            const styleElement = document.createElement('style');
+            styleElement.textContent = `
+                .recommendations-section {
+                    width: 100%;
+                    margin: 0 auto;
+                    padding: 0 20px;
+                    clear: both;
+                    position: relative;
+                    z-index: 1;
+                }
+                
+                .recommendations-container {
+                    margin: 30px auto;
+                    padding: 30px;
+                    background: rgba(20, 20, 20, 0.8);
+                    border-radius: 20px;
+                    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    max-width: 1400px;
+                    position: relative;
+                    overflow: hidden;
+                }
+                
+                .recommendations-container::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    width: 100px;
+                    height: 100%;
+                    background: linear-gradient(to left, rgba(20, 20, 20, 0.8), transparent);
+                    pointer-events: none;
+                    z-index: 1;
+                }
+                
+                .recommendations-container::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 4px;
+                    background: linear-gradient(to right, var(--primary-color), #ff5e3a);
+                }
+                
+                .recommendations-container h3 {
+                    color: #fff;
+                    font-size: 28px;
+                    margin-bottom: 30px;
+                    font-weight: 700;
+                    letter-spacing: 0.5px;
+                    position: relative;
+                    display: inline-block;
+                    padding-bottom: 10px;
+                    text-shadow: 0 2px 10px rgba(229, 9, 20, 0.3);
+                }
+                
+                .recommendations-container h3::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 80px;
+                    height: 3px;
+                    background: linear-gradient(to right, var(--primary-color), #ff5e3a);
+                    border-radius: 3px;
+                }
+                
+                .recommendations-list {
+                    display: flex;
+                    overflow-x: auto;
+                    gap: 25px;
+                    padding: 15px 0;
+                    width: 100%;
+                    scroll-behavior: smooth;
+                    scrollbar-width: thin;
+                    scrollbar-color: var(--primary-color) rgba(0, 0, 0, 0.2);
+                }
+                
+                .recommendations-list::-webkit-scrollbar {
+                    height: 8px;
+                }
+                
+                .recommendations-list::-webkit-scrollbar-track {
+                    background: rgba(0, 0, 0, 0.2);
+                    border-radius: 10px;
+                }
+                
+                .recommendations-list::-webkit-scrollbar-thumb {
+                    background: linear-gradient(to right, var(--primary-color), #ff5e3a);
+                    border-radius: 10px;
+                }
+
+                .recommendation-item {
+                    background-color: rgba(30, 30, 30, 0.7);
+                    padding: 0;
+                    border-radius: 15px;
+                    cursor: pointer;
+                    transition: all 0.4s ease;
+                    display: flex;
+                    flex-direction: column;
+                    overflow: hidden;
+                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    height: 280px;
+                    position: relative;
+                    min-width: 200px;
+                    flex: 0 0 auto;
+                    width: 220px;
+                }
+                
+                .recommendation-image {
+                    width: 100%;
+                    height: 200px;
+                    overflow: hidden;
+                    position: relative;
+                }
+                
+                .recommendation-image::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 40px;
+                    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+                    z-index: 1;
+                }
+                
+                .recommendation-image img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: transform 0.5s ease;
+                }
+                
+                .recommendation-item:hover {
+                    transform: translateY(-8px) scale(1.02);
+                    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+                    border-color: rgba(229, 9, 20, 0.4);
+                    z-index: 1;
+                }
+                
+                .recommendation-item:hover .recommendation-image img {
+                    transform: scale(1.08);
+                }
+                
+                .recommendation-title {
+                    font-weight: 700;
+                    color: #fff;
+                    margin: 12px 15px 5px 15px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    font-size: 16px;
+                    letter-spacing: 0.5px;
+                }
+                
+                .recommendation-similarity {
+                    font-size: 14px;
+                    margin: 0 15px 12px 15px;
+                    font-weight: 600;
+                    display: flex;
+                    align-items: center;
+                    position: relative;
+                }
+                
+                .recommendation-similarity::before {
+                    content: '';
+                    display: inline-block;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    margin-right: 8px;
+                }
+                
+                /* Match percentage styling with color coding based on user example */
+                .recommendation-similarity:contains("47%")::before,
+                .recommendation-similarity:contains("35%")::before,
+                .recommendation-similarity:contains("30%")::before,
+                .recommendation-similarity:contains("25%")::before {
+                    background-color: #4CAF50;
+                    box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+                }
+                
+                .recommendation-similarity:contains("26%")::before,
+                .recommendation-similarity:contains("24%")::before,
+                .recommendation-similarity:contains("22%")::before,
+                .recommendation-similarity:contains("20%")::before {
+                    background-color: #FFC107;
+                    box-shadow: 0 0 8px rgba(255, 193, 7, 0.6);
+                }
+                
+                .recommendation-similarity:contains("18%")::before,
+                .recommendation-similarity:contains("15%")::before,
+                .recommendation-similarity:contains("10%")::before {
+                    background-color: var(--primary-color);
+                    box-shadow: 0 0 8px rgba(229, 9, 20, 0.6);
+                }
+                
+                /* Match percentage text color */
+                .recommendation-similarity:contains("47%"),
+                .recommendation-similarity:contains("35%"),
+                .recommendation-similarity:contains("30%"),
+                .recommendation-similarity:contains("25%") {
+                    color: #4CAF50;
+                }
+                
+                .recommendation-similarity:contains("26%"),
+                .recommendation-similarity:contains("24%"),
+                .recommendation-similarity:contains("22%"),
+                .recommendation-similarity:contains("20%") {
+                    color: #FFC107;
+                }
+                
+                .recommendation-similarity:contains("18%"),
+                .recommendation-similarity:contains("15%"),
+                .recommendation-similarity:contains("10%") {
+                    color: var(--primary-color);
+                }
+                
+                @keyframes pulse {
+                    0% { opacity: 0.5; transform: scale(0.8); }
+                    50% { opacity: 1; transform: scale(1.2); }
+                }
+                
+                .scroll-indicator {
+                    position: absolute;
+                    right: 30px;
+                    bottom: 30px;
+                    display: flex;
+                    align-items: center;
+                    color: rgba(255, 255, 255, 0.7);
+                    font-size: 14px;
+                    animation: fadeInOut 2s infinite;
+                    z-index: 2;
+                }
+                
+                .scroll-indicator i {
+                    margin-left: 8px;
+                    animation: slideRight 1.5s infinite;
+                }
+                
+                @keyframes fadeInOut {
+                    0%, 100% { opacity: 0.7; }
+                    50% { opacity: 1; }
+                }
+                
+                @keyframes slideRight {
+                    0%, 100% { transform: translateX(0); }
+                    50% { transform: translateX(5px); }
+                    100% { opacity: 0.5; transform: scale(0.8); }
+                }
+                
+                .recommendations-error {
+                    padding: 20px;
+                    background-color: rgba(220, 53, 69, 0.1);
+                    border-radius: 12px;
+                    margin-top: 25px;
+                    color: #ff5e5e;
+                    border: 1px solid rgba(220, 53, 69, 0.2);
+                    text-align: center;
+                    font-weight: 500;
+                }
+                
+                .recommendations-loading {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 40px 0;
+                }
+                
+                @media (max-width: 768px) {
+                    .recommendations-container {
+                        padding: 20px;
+                    }
+                    
+                    .recommendations-list {
+                        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                        gap: 15px;
+                    }
+                    
+                    .recommendation-item {
+                        height: 260px;
+                    }
+                    
+                    .recommendation-image {
+                        height: 180px;
+                    }
+                    
+                    .recommendation-title {
+                        font-size: 14px;
+                        margin: 10px 10px 3px 10px;
+                    }
+                    
+                    .recommendation-similarity {
+                        font-size: 13px;
+                        margin: 0 10px 10px 10px;
+                    }
+                }
+            `
+            document.head.appendChild(styleElement);
+        });
+    </script>
+</body>
+</html>
