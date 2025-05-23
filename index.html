@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Sen:wght@400;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <title>Flakes | Streaming Movies & TV Shows</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/48/000000/clapperboard.png">
+</head>
+
+<body class="dark-mode">
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="navbar-container">
+            <div class="logo-container">
+                <h1 class="logo">FLAKES</h1>
+            </div>
+            <div class="menu-container">
+                <!-- Fix menu list items -->
+                <ul class="menu-list">
+                    <li class="menu-list-item active"><a href="#home">Home</a></li>
+                    <!-- <li class="menu-list-item"><a href="#movies">Movies</a></li>
+                    <li class="menu-list-item"><a href="#series">Series</a></li>
+                    <li class="menu-list-item"><a href="#popular">Popular</a></li>
+                    <li class="menu-list-item"><a href="#trends">Trends</a></li> -->
+                </ul>
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search for movies or TV shows...">
+                <button class="search-button"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="profile-container">
+                <!-- <div class="toggle">
+                    <i class="fas fa-moon toggle-icon"></i>
+                    <i class="fas fa-sun toggle-icon"></i>
+                    <div class="toggle-ball"></div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content-container">
+            <!-- Featured Content -->
+            <div class="featured-content"
+                style="background: linear-gradient(to bottom, rgba(0,0,0,0), #151515), url('img/f-1.jpg');">
+                <img class="featured-title" src="img/f-t-1.png" alt="Featured Movie Title">
+                <p class="featured-desc">A heartwarming story about a man who falls in love with an AI operating system. Exploring the complexities of human connection in the digital age, this film raises thought-provoking questions about consciousness and emotion.</p>
+                <button class="featured-button">WATCH NOW <i class="fas fa-play-circle ml-2"></i></button>
+            </div>
+
+            <!-- Movie List - New Releases -->
+            <div class="movie-list-container">
+                <h1 class="movie-list-title">NEW RELEASES</h1>
+                <div class="movie-list-wrapper">
+                    <div class="movie-list">
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/1.jpeg" alt="Her Movie">
+                            <span class="movie-list-item-title">Her</span>
+                            <p class="movie-list-item-desc">A lonely writer develops an unlikely relationship with his newly purchased operating system.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/2.jpeg" alt="Star Wars Movie">
+                            <span class="movie-list-item-title">Star Wars</span>
+                            <p class="movie-list-item-desc">The epic space saga continues with new heroes, villains, and adventures across the galaxy.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/3.jpg" alt="Storm Movie">
+                            <span class="movie-list-item-title">Storm</span>
+                            <p class="movie-list-item-desc">A weather scientist makes a breakthrough discovery that could change the course of natural disasters.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/4.jpg" alt="1917 Movie">
+                            <span class="movie-list-item-title">1917</span>
+                            <p class="movie-list-item-desc">Two soldiers race against time to deliver a message that could save 1,600 men during World War I.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/5.jpg" alt="Avengers Movie">
+                            <span class="movie-list-item-title">Avengers</span>
+                            <p class="movie-list-item-desc">Earth's mightiest heroes must unite to defeat the greatest threat the world has ever faced.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/6.jpg" alt="Inception Movie">
+                            <span class="movie-list-item-title">Inception</span>
+                            <p class="movie-list-item-desc">A thief who steals corporate secrets through dream-sharing technology is given the task of planting an idea.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/7.jpg" alt="Interstellar Movie">
+                            <span class="movie-list-item-title">Interstellar</span>
+                            <p class="movie-list-item-desc">Explorers travel through a wormhole in space in an attempt to ensure humanity's survival.</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
+            </div>
+
+            <!-- Movie List - Popular on Flakes -->
+            <div class="movie-list-container">
+                <h1 class="movie-list-title">POPULAR ON FLAKES</h1>
+                <div class="movie-list-wrapper">
+                    <div class="movie-list">
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/8.jpg" alt="Joker Movie">
+                            <span class="movie-list-item-title">Joker</span>
+                            <p class="movie-list-item-desc">A failed comedian descends into madness and turns to a life of crime in Gotham City.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/9.jpg" alt="Dark Knight Movie">
+                            <span class="movie-list-item-title">Dark Knight</span>
+                            <p class="movie-list-item-desc">Batman faces his ultimate test when he confronts the Joker, a criminal mastermind.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/10.jpg" alt="Parasite Movie">
+                            <span class="movie-list-item-title">Parasite</span>
+                            <p class="movie-list-item-desc">A poor family schemes to become employed by a wealthy family and infiltrate their household.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/11.jpg" alt="Shutter Island Movie">
+                            <span class="movie-list-item-title">Shutter Island</span>
+                            <p class="movie-list-item-desc">A U.S. Marshal investigates the disappearance of a murderess who escaped from a hospital for the criminally insane.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/12.jpg" alt="Fight Club Movie">
+                            <span class="movie-list-item-title">Fight Club</span>
+                            <p class="movie-list-item-desc">An insomniac office worker and a devil-may-care soapmaker form an underground fight club.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/1.jpg" alt="Matrix Movie">
+                            <span class="movie-list-item-title">Matrix</span>
+                            <p class="movie-list-item-desc">A computer hacker learns from mysterious rebels about the true nature of his reality.</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
+            </div>
+
+            <!-- Movie List - Trending Now -->
+            <div class="movie-list-container">
+                <h1 class="movie-list-title">TRENDING NOW</h1>
+                <div class="movie-list-wrapper">
+                    <div class="movie-list">
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/13.jpg" alt="Godfather Movie">
+                            <span class="movie-list-item-title">The Godfather</span>
+                            <p class="movie-list-item-desc">The aging patriarch of an organized crime dynasty transfers control to his reluctant son.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/14.jpg" alt="Titanic Movie">
+                            <span class="movie-list-item-title">Titanic</span>
+                            <p class="movie-list-item-desc">A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/15.jpg" alt="Pulp Fiction Movie">
+                            <span class="movie-list-item-title">Pulp Fiction</span>
+                            <p class="movie-list-item-desc">The lives of two mob hitmen, a boxer, a gangster and his wife intertwine in four tales of violence and redemption.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/16.jpg" alt="Forrest Gump Movie">
+                            <span class="movie-list-item-title">Forrest Gump</span>
+                            <p class="movie-list-item-desc">The presidencies of Kennedy and Johnson, the Vietnam War, the Watergate scandal through the eyes of an Alabama man.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/17.jpg" alt="Avatar Movie">
+                            <span class="movie-list-item-title">Avatar</span>
+                            <p class="movie-list-item-desc">A paraplegic Marine dispatched to the moon Pandora becomes torn between following orders and protecting the world he feels is his home.</p>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="img/18.jpg" alt="Lord of the Rings Movie">
+                            <span class="movie-list-item-title">Lord of the Rings</span>
+                            <p class="movie-list-item-desc">A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth.</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-heading">About Flakes</h3>
+                    <p>The premium movie streaming service providing the best cinematic experience with a vast collection of films and TV shows.</p>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Account</a></li>
+                        <li><a href="#">Media Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-heading">Contact Us</h3>
+                    <p><i class="fas fa-envelope"></i> support@flakes.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (800) 123-4567</p>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-heading">Follow Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Flakes. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
